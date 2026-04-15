@@ -63,16 +63,6 @@
   .hdr-btn:hover { background: rgba(255,255,255,0.22); }
   .hdr-btn.active { background: var(--blue); }
 
-  /* TABS */
-  .tabs { display: flex; background: var(--white); border-bottom: 2px solid var(--border); overflow-x: auto; }
-  .tab {
-    flex: 1; min-width: 80px; padding: 12px 8px; text-align: center;
-    font-size: 13px; font-weight: 600; color: var(--slate); cursor: pointer;
-    border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap;
-    transition: all 0.2s;
-  }
-  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
-
   /* MAIN CONTENT */
   .main { padding: 16px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
 
@@ -122,8 +112,26 @@
   .number-input:focus { outline: none; border-color: var(--blue); }
   .input-hint { font-size: 12px; color: var(--slate); margin-top: 2px; }
 
+  /* DOLLAR INPUT */
+  .dollar-input-wrap { position: relative; width: 110px; }
+  .dollar-prefix { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 15px; color: var(--slate); font-weight: 600; pointer-events: none; }
+  .dollar-input { width: 100%; padding: 8px 10px 8px 22px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: 'Karla', sans-serif; font-size: 16px; color: var(--charcoal); }
+  .dollar-input:focus { outline: none; border-color: var(--blue); }
+
+  /* TWO-BUTTON TAP */
+  .two-btn-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .two-btn-group { display: flex; gap: 8px; }
+  .two-btn {
+    padding: 8px 18px; border-radius: var(--radius-sm); border: 2px solid var(--border);
+    font-family: 'Karla', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer;
+    background: var(--white); color: var(--slate); transition: all 0.2s;
+  }
+  .two-btn.selected-free { background: #e8f7ef; border-color: #2ecc71; color: #1a7a45; }
+  .two-btn.selected-paid { background: #fdf0ee; border-color: var(--red); color: #c0392b; }
+
   /* TIMER */
   .timer-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .timer-row:last-child { border-bottom: none; }
   .timer-display { font-size: 24px; font-weight: 700; color: var(--charcoal); font-variant-numeric: tabular-nums; min-width: 70px; }
   .timer-btn {
     padding: 8px 18px; border-radius: var(--radius-sm); border: none; font-family: 'Karla', sans-serif;
@@ -200,7 +208,6 @@
     cursor: pointer; transition: all 0.2s;
   }
   .save-btn-primary { background: var(--blue); color: white; }
-  .save-btn-primary:hover { background: #0940891; }
   .save-btn-primary:active { transform: scale(0.98); }
   .save-btn-secondary { background: var(--border); color: var(--charcoal); flex: 0 0 auto; padding: 15px 20px; }
 
@@ -238,9 +245,8 @@
   .saved-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
   .chip { padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--bg); color: var(--slate); border: 1px solid var(--border); }
   .chip-yes { background: #e8f7ef; color: #1a7a45; border-color: #b2dfcc; }
-  .chip-no { background: #fdf0ee; color: #c0392b; border-color: #f5b7b1; }
 
-  /* STATUS TOAST */
+  /* TOAST */
   .toast {
     position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
     background: var(--charcoal); color: white; padding: 10px 20px; border-radius: 30px;
@@ -250,7 +256,7 @@
   .toast.success { background: #1a7a45; }
   .toast.error { background: #c0392b; }
 
-  /* MODAL for edit */
+  /* MODAL */
   .modal-overlay {
     display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300;
     align-items: flex-end; justify-content: center;
@@ -307,85 +313,155 @@
         <select class="building-select" id="building-select" onchange="onBuildingChange()">
           <option value="">— Select a building —</option>
           <optgroup label="Buckhead">
-  <option value="3445 Peachtree|Buckhead">3445 Peachtree</option>
-  <option value="Prominence Tower|Buckhead">Prominence Tower — 3475 Piedmont Rd NE</option>
-  <option value="Salesforce Tower|Buckhead">Salesforce Tower — 950 E Paces Ferry Rd NE</option>
-  <option value="One Alliance|Buckhead">One Alliance — 3500 Lenox Rd NE</option>
-  <option value="Three Alliance Center|Buckhead">Three Alliance Center — 3550 Lenox Rd NE</option>
-  <option value="Two Alliance|Buckhead">Two Alliance — 3560 Lenox Rd NE</option>
-  <option value="The Forum at West Paces|Buckhead">The Forum at West Paces — 3290 Northside Pky NW</option>
-  <option value="Tower Place 100|Buckhead">Tower Place 100 — 3340 Peachtree Rd NE</option>
-  <option value="3344 Peachtree|Buckhead">3344 Peachtree</option>
-  <option value="3399 Peachtree|Buckhead">3399 Peachtree</option>
-  <option value="Monarch Tower|Buckhead">Monarch Tower — 3424 Peachtree Rd NE</option>
-  <option value="3630 Peachtree|Buckhead">3630 Peachtree</option>
-  <option value="One Buckhead Plaza|Buckhead">One Buckhead Plaza — 3060 Peachtree Rd NW</option>
-  <option value="Live Oak Square|Buckhead">Live Oak Square — 3475 Lenox Rd NE</option>
-  <option value="Resurgens Plaza|Buckhead">Resurgens Plaza — 945 E Paces Ferry Rd NE</option>
-  <option value="Garden Hills Office Building|Buckhead">Garden Hills Office Building — 2827 Peachtree Rd</option>
-  <option value="Tower Place 200|Buckhead">Tower Place 200 — 3348 Peachtree Rd NE</option>
-  <option value="3350 Peachtree|Buckhead">3350 Peachtree</option>
-  <option value="Phipps Tower|Buckhead">Phipps Tower — 3438 Peachtree Rd NE</option>
-  <option value="AFC East Tower|Buckhead">AFC - East Tower — 3343 Peachtree Rd NE</option>
-  <option value="Two Buckhead Plaza|Buckhead">Two Buckhead Plaza — 3050 Peachtree Rd NW</option>
-  <option value="Custom Buckhead|Buckhead">+ Add Custom (Buckhead)</option>
-</optgroup>
+            <option value="3445 Peachtree|Buckhead">3445 Peachtree</option>
+            <option value="Prominence Tower|Buckhead">Prominence Tower — 3475 Piedmont Rd NE</option>
+            <option value="Salesforce Tower|Buckhead">Salesforce Tower — 950 E Paces Ferry Rd NE</option>
+            <option value="One Alliance|Buckhead">One Alliance — 3500 Lenox Rd NE</option>
+            <option value="Three Alliance Center|Buckhead">Three Alliance Center — 3550 Lenox Rd NE</option>
+            <option value="Two Alliance|Buckhead">Two Alliance — 3560 Lenox Rd NE</option>
+            <option value="The Forum at West Paces|Buckhead">The Forum at West Paces — 3290 Northside Pky NW</option>
+            <option value="Tower Place 100|Buckhead">Tower Place 100 — 3340 Peachtree Rd NE</option>
+            <option value="3344 Peachtree|Buckhead">3344 Peachtree</option>
+            <option value="3399 Peachtree|Buckhead">3399 Peachtree</option>
+            <option value="Monarch Tower|Buckhead">Monarch Tower — 3424 Peachtree Rd NE</option>
+            <option value="3630 Peachtree|Buckhead">3630 Peachtree</option>
+            <option value="One Buckhead Plaza|Buckhead">One Buckhead Plaza — 3060 Peachtree Rd NW</option>
+            <option value="Live Oak Square|Buckhead">Live Oak Square — 3475 Lenox Rd NE</option>
+            <option value="Resurgens Plaza|Buckhead">Resurgens Plaza — 945 E Paces Ferry Rd NE</option>
+            <option value="Garden Hills Office Building|Buckhead">Garden Hills Office Building — 2827 Peachtree Rd</option>
+            <option value="Tower Place 200|Buckhead">Tower Place 200 — 3348 Peachtree Rd NE</option>
+            <option value="3350 Peachtree|Buckhead">3350 Peachtree</option>
+            <option value="Phipps Tower|Buckhead">Phipps Tower — 3438 Peachtree Rd NE</option>
+            <option value="AFC East Tower|Buckhead">AFC - East Tower — 3343 Peachtree Rd NE</option>
+            <option value="Two Buckhead Plaza|Buckhead">Two Buckhead Plaza — 3050 Peachtree Rd NW</option>
+            <option value="Custom Buckhead|Buckhead">+ Add Custom (Buckhead)</option>
+          </optgroup>
           <optgroup label="Central Perimeter">
-  <option value="10 Glenlake North Tower|Central Perimeter">10 Glenlake North Tower — 10 Glenlake Pky NE</option>
-  <option value="10 Glenlake South Tower|Central Perimeter">10 Glenlake South Tower — 10 Glenlake Pky NE</option>
-  <option value="One Glenlake|Central Perimeter">One Glenlake — 1 Glenlake Pky NE</option>
-  <option value="Crown Pointe North|Central Perimeter">Crown Pointe North — 1050 Crown Pointe Pky</option>
-  <option value="Crown Pointe South|Central Perimeter">Crown Pointe South — 1040 Crown Pointe Pky</option>
-  <option value="Perimeter Center West|Central Perimeter">Perimeter Center West — 1155 Perimeter Ctr W</option>
-  <option value="South Terraces|Central Perimeter">South Terraces — 115 Perimeter Center Pl NE</option>
-  <option value="7000 Central Park|Central Perimeter">7000 Central Park — 7000 Central Pky NE</option>
-  <option value="Lakeside Commons I|Central Perimeter">Lakeside Commons I — 990 Hammond Dr NE</option>
-  <option value="Lakeside Commons II|Central Perimeter">Lakeside Commons II — 980 Hammond Dr NE</option>
-  <option value="Building D|Central Perimeter">Building D — 5909 Peachtree Dunwoody Rd NE</option>
-  <option value="King|Central Perimeter">King — 6 Concourse Pky NE</option>
-  <option value="Queen|Central Perimeter">Queen — 5 Concourse Pky NE</option>
-  <option value="Summit One|Central Perimeter">Summit One — 1001 Summit Blvd</option>
-  <option value="Glenridge Highlands Two|Central Perimeter">Glenridge Highlands Two — 5565 Glenridge Connector</option>
-  <option value="Glenridge Highlands One|Central Perimeter">Glenridge Highlands One — 5555 Glenridge Connector</option>
-  <option value="Centrum at Glenridge|Central Perimeter">Centrum at Glenridge — 780 Johnson Ferry Rd NE</option>
-  <option value="Campus 244|Central Perimeter">Campus 244 — 244 Perimeter Center Pky NE</option>
-  <option value="Summit Two|Central Perimeter">Summit Two — 2002 Summit Blvd</option>
-  <option value="3003 Perimeter Summit|Central Perimeter">3003 Perimeter Summit — 3003 Summit Blvd</option>
-  <option value="Summit Four|Central Perimeter">Summit Four — 4004 Summit Blvd</option>
-  <option value="Custom Perimeter|Central Perimeter">+ Add Custom (Central Perimeter)</option>
-</optgroup>
+            <option value="10 Glenlake North Tower|Central Perimeter">10 Glenlake North Tower — 10 Glenlake Pky NE</option>
+            <option value="10 Glenlake South Tower|Central Perimeter">10 Glenlake South Tower — 10 Glenlake Pky NE</option>
+            <option value="One Glenlake|Central Perimeter">One Glenlake — 1 Glenlake Pky NE</option>
+            <option value="Crown Pointe North|Central Perimeter">Crown Pointe North — 1050 Crown Pointe Pky</option>
+            <option value="Crown Pointe South|Central Perimeter">Crown Pointe South — 1040 Crown Pointe Pky</option>
+            <option value="Perimeter Center West|Central Perimeter">Perimeter Center West — 1155 Perimeter Ctr W</option>
+            <option value="South Terraces|Central Perimeter">South Terraces — 115 Perimeter Center Pl NE</option>
+            <option value="7000 Central Park|Central Perimeter">7000 Central Park — 7000 Central Pky NE</option>
+            <option value="Lakeside Commons I|Central Perimeter">Lakeside Commons I — 990 Hammond Dr NE</option>
+            <option value="Lakeside Commons II|Central Perimeter">Lakeside Commons II — 980 Hammond Dr NE</option>
+            <option value="Building D|Central Perimeter">Building D — 5909 Peachtree Dunwoody Rd NE</option>
+            <option value="King|Central Perimeter">King — 6 Concourse Pky NE</option>
+            <option value="Queen|Central Perimeter">Queen — 5 Concourse Pky NE</option>
+            <option value="Summit One|Central Perimeter">Summit One — 1001 Summit Blvd</option>
+            <option value="Glenridge Highlands Two|Central Perimeter">Glenridge Highlands Two — 5565 Glenridge Connector</option>
+            <option value="Glenridge Highlands One|Central Perimeter">Glenridge Highlands One — 5555 Glenridge Connector</option>
+            <option value="Centrum at Glenridge|Central Perimeter">Centrum at Glenridge — 780 Johnson Ferry Rd NE</option>
+            <option value="Campus 244|Central Perimeter">Campus 244 — 244 Perimeter Center Pky NE</option>
+            <option value="Summit Two|Central Perimeter">Summit Two — 2002 Summit Blvd</option>
+            <option value="3003 Perimeter Summit|Central Perimeter">3003 Perimeter Summit — 3003 Summit Blvd</option>
+            <option value="Summit Four|Central Perimeter">Summit Four — 4004 Summit Blvd</option>
+            <option value="Custom Perimeter|Central Perimeter">+ Add Custom (Central Perimeter)</option>
+          </optgroup>
         </select>
         <div id="submarket-badge" style="display:none;"></div>
         <input type="text" id="custom-building-name" placeholder="Enter building name..." style="display:none; margin-top:10px; width:100%; padding:10px 12px; border:2px solid var(--border); border-radius:8px; font-family:Karla,sans-serif; font-size:16px;" oninput="updateCustomName()">
       </div>
 
-      <!-- PARKING -->
+      <!-- 1. ACCESS -->
       <div class="survey-card">
-        <div class="card-title"><span class="card-icon">🅿️</span> Parking</div>
+        <div class="card-title"><span class="card-icon">🚘</span> Access</div>
 
         <div class="number-input-row">
           <div>
-            <div class="toggle-label">Space Width (ft)</div>
-            <div class="input-hint">Standard = 8.5 ft</div>
+            <div class="toggle-label">Number of Access Points</div>
           </div>
-          <input type="number" class="number-input" id="parking-width" step="0.5" min="6" max="12" placeholder="—">
+          <input type="number" class="number-input" id="access-points" min="1" max="10" step="1" placeholder="—">
         </div>
 
-        <div class="toggle-row">
-          <div class="toggle-label">Free Parking</div>
-          <label class="toggle-switch"><input type="checkbox" id="parking-free"><span class="toggle-slider"></span></label>
+        <div class="star-row">
+          <div class="star-label">Ease of Access (1–5)</div>
+          <div class="stars" id="stars-access">
+            <span class="star" onclick="setStars('access',1)">★</span>
+            <span class="star" onclick="setStars('access',2)">★</span>
+            <span class="star" onclick="setStars('access',3)">★</span>
+            <span class="star" onclick="setStars('access',4)">★</span>
+            <span class="star" onclick="setStars('access',5)">★</span>
+          </div>
         </div>
-        <div class="toggle-row">
-          <div class="toggle-label">Visitor Parking Available</div>
-          <label class="toggle-switch"><input type="checkbox" id="parking-visitor"><span class="toggle-slider"></span></label>
+
+        <div style="margin-top:10px;">
+          <div class="section-label">Access Notes</div>
+          <textarea class="note-area" id="access-notes" placeholder="Road approach, signage, entry points..."></textarea>
         </div>
+      </div>
+
+      <!-- 2. PARKING -->
+      <div class="survey-card">
+        <div class="card-title"><span class="card-icon">🅿️</span> Parking</div>
+
+        <div class="two-btn-row">
+          <div class="toggle-label">Parking Cost</div>
+          <div class="two-btn-group">
+            <button class="two-btn" id="parking-free-btn" onclick="setParkingCost('free')">Free</button>
+            <button class="two-btn" id="parking-paid-btn" onclick="setParkingCost('paid')">Paid</button>
+          </div>
+        </div>
+
+        <div class="number-input-row">
+          <div>
+            <div class="toggle-label">Unreserved Rate</div>
+            <div class="input-hint">$/mo — fill in later if needed</div>
+          </div>
+          <div class="dollar-input-wrap">
+            <span class="dollar-prefix">$</span>
+            <input type="number" class="dollar-input" id="parking-unreserved-rate" min="0" placeholder="—">
+          </div>
+        </div>
+
+        <div class="number-input-row">
+          <div>
+            <div class="toggle-label">Reserved Rate</div>
+            <div class="input-hint">$/mo — fill in later if needed</div>
+          </div>
+          <div class="dollar-input-wrap">
+            <span class="dollar-prefix">$</span>
+            <input type="number" class="dollar-input" id="parking-reserved-rate" min="0" placeholder="—">
+          </div>
+        </div>
+
+        <div class="star-row">
+          <div class="star-label">Visitor Parking Quality (1–5)</div>
+          <div class="stars" id="stars-visitor">
+            <span class="star" onclick="setStars('visitor',1)">★</span>
+            <span class="star" onclick="setStars('visitor',2)">★</span>
+            <span class="star" onclick="setStars('visitor',3)">★</span>
+            <span class="star" onclick="setStars('visitor',4)">★</span>
+            <span class="star" onclick="setStars('visitor',5)">★</span>
+          </div>
+        </div>
+
         <div class="toggle-row">
           <div class="toggle-label">Visitor Parking Easy to Find</div>
           <label class="toggle-switch"><input type="checkbox" id="parking-visitor-clear"><span class="toggle-slider"></span></label>
         </div>
         <div class="toggle-row">
+          <div class="toggle-label">Valet Available</div>
+          <label class="toggle-switch"><input type="checkbox" id="parking-valet"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
           <div class="toggle-label">Deck Access Intuitive</div>
           <label class="toggle-switch"><input type="checkbox" id="parking-access"><span class="toggle-slider"></span></label>
+        </div>
+
+        <div class="number-input-row" style="margin-top:4px;">
+          <div>
+            <div class="toggle-label">Space Width (inches)</div>
+            <div class="input-hint">Standard = 102 in (8.5 ft)</div>
+          </div>
+          <input type="number" class="number-input" id="parking-width" step="1" min="72" max="144" placeholder="—">
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="section-label">Parking Notes</div>
+          <textarea class="note-area" id="parking-notes" placeholder="Observations about parking..."></textarea>
         </div>
 
         <div class="timer-row" style="margin-top:10px;">
@@ -399,14 +475,9 @@
             <button class="timer-btn timer-reset" onclick="resetTimer()">↺</button>
           </div>
         </div>
-
-        <div style="margin-top:10px;">
-          <div class="section-label">Parking Notes</div>
-          <textarea class="note-area" id="parking-notes" placeholder="Observations about parking..."></textarea>
-        </div>
       </div>
 
-      <!-- ARRIVAL / LOBBY -->
+      <!-- 3. ARRIVAL / LOBBY -->
       <div class="survey-card">
         <div class="card-title"><span class="card-icon">🏢</span> Arrival & Lobby</div>
 
@@ -436,11 +507,10 @@
         </div>
       </div>
 
-      <!-- AMENITIES -->
+      <!-- 4. AMENITIES -->
       <div class="survey-card">
         <div class="card-title"><span class="card-icon">🏋️</span> Amenities</div>
 
-        <!-- GYM -->
         <div class="slider-section">
           <div class="slider-header">
             <div class="slider-label">Gym Quality (1–10)</div>
@@ -472,10 +542,9 @@
 
         <div class="divider"></div>
 
-        <!-- AMENITY SPACE -->
         <div class="star-row" style="margin-top:10px;">
           <div class="toggle-row" style="padding-top:0;">
-            <div class="toggle-label">Amenity/Gathering Space</div>
+            <div class="toggle-label">Amenity / Gathering Space</div>
             <label class="toggle-switch"><input type="checkbox" id="amenity-exists"><span class="toggle-slider"></span></label>
           </div>
           <div class="star-label" style="margin-top:8px;">Amenity Space Quality (1–5)</div>
@@ -490,7 +559,6 @@
 
         <div class="divider" style="margin-top:10px;"></div>
 
-        <!-- CAFE -->
         <div style="margin-top:10px;">
           <div class="toggle-row" style="padding-top:0;">
             <div class="toggle-label">Building Café</div>
@@ -521,19 +589,15 @@
         </div>
       </div>
 
-      <!-- INTERIOR -->
+      <!-- 5. INTERIOR -->
       <div class="survey-card">
         <div class="card-title"><span class="card-icon">📐</span> Interior (if accessible)</div>
         <div class="number-input-row">
-          <div>
-            <div class="toggle-label">Ceiling Height (ft)</div>
-          </div>
+          <div><div class="toggle-label">Ceiling Height (ft)</div></div>
           <input type="number" class="number-input" id="ceiling-height" step="0.5" min="8" max="20" placeholder="—">
         </div>
         <div class="number-input-row">
-          <div>
-            <div class="toggle-label">Glass Line Height (ft)</div>
-          </div>
+          <div><div class="toggle-label">Glass Line Height (ft)</div></div>
           <input type="number" class="number-input" id="glass-height" step="0.5" min="4" max="20" placeholder="—">
         </div>
         <div style="margin-top:10px;">
@@ -542,7 +606,7 @@
         </div>
       </div>
 
-      <!-- EGRESS -->
+      <!-- 6. EGRESS -->
       <div class="survey-card">
         <div class="card-title"><span class="card-icon">🚗</span> Egress</div>
         <div class="toggle-row">
@@ -563,7 +627,7 @@
         </div>
       </div>
 
-      <!-- OVERALL -->
+      <!-- 7. OVERALL -->
       <div class="survey-card">
         <div class="card-title"><span class="card-icon">📊</span> Overall Assessment</div>
 
@@ -593,13 +657,13 @@
         </div>
       </div>
 
-    </div><!-- end main -->
-  </div><!-- end survey-tab -->
+    </div>
+  </div>
 
   <!-- CALIBRATION TAB -->
   <div id="calibration-tab">
     <div class="main">
-      <div class="calib-header">Tap any building to edit its ratings. Use this to recalibrate as you see more buildings throughout the day.</div>
+      <div class="calib-header">Tap any building to edit its ratings. Recalibrate as you see more buildings throughout the day.</div>
       <div id="calib-list"></div>
     </div>
   </div>
@@ -612,15 +676,12 @@
     </div>
   </div>
 
-  <!-- SAVE BAR -->
   <div class="save-bar" id="save-bar">
     <button class="save-btn save-btn-secondary" onclick="clearForm()">Clear</button>
     <button class="save-btn save-btn-primary" onclick="saveBuilding()">Save to Sheet →</button>
   </div>
+</div>
 
-</div><!-- end app -->
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- EDIT MODAL -->
@@ -663,7 +724,7 @@
 
     <div style="margin-top:14px;">
       <div class="section-label">Tier</div>
-      <div class="tier-selector" id="modal-tier-selector">
+      <div class="tier-selector">
         <button class="tier-btn" id="modal-tier-A" onclick="setModalTier('A')">A List</button>
         <button class="tier-btn" id="modal-tier-B" onclick="setModalTier('B')">B List</button>
         <button class="tier-btn" id="modal-tier-C" onclick="setModalTier('C')">C List</button>
@@ -675,16 +736,15 @@
 </div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
 const CLIENT_ID = '21942567768-4s4d3m8pa8ck95oum0lggig9uoimab3j.apps.googleusercontent.com';
 const SHEET_ID = '1vXdhIMrf3ICkFRQ1vFQ4zSNC1fijT7n_mRdbGJfjiJQ';
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
-// ─── STATE ────────────────────────────────────────────────
 let accessToken = null;
 let surveys = JSON.parse(localStorage.getItem('sm_surveys') || '[]');
-let stars = { lobby: 0, amenity: 0, cafe: 0, overall: 0 };
+let stars = { access: 0, visitor: 0, lobby: 0, amenity: 0, cafe: 0, overall: 0 };
 let gymCompare = '';
+let parkingCost = '';
 let tier = '';
 let timerInterval = null;
 let timerSeconds = 0;
@@ -694,7 +754,6 @@ let modalStars = { lobby: 0, overall: 0 };
 let modalTier = '';
 let modalGymVal = 0;
 
-// ─── AUTH ─────────────────────────────────────────────────
 function signIn() {
   const params = new URLSearchParams({
     client_id: CLIENT_ID,
@@ -707,22 +766,17 @@ function signIn() {
 }
 
 function checkAuth() {
-  // Check URL hash for token
   const hash = window.location.hash.substring(1);
   const params = new URLSearchParams(hash);
   if (params.get('access_token')) {
     accessToken = params.get('access_token');
     window.history.replaceState({}, document.title, window.location.pathname);
-    showApp();
-    return;
+    showApp(); return;
   }
-  // Check localStorage
   const stored = localStorage.getItem('sm_token');
   const expiry = localStorage.getItem('sm_token_expiry');
   if (stored && expiry && Date.now() < parseInt(expiry)) {
-    accessToken = stored;
-    showApp();
-    return;
+    accessToken = stored; showApp(); return;
   }
   document.getElementById('auth-screen').style.display = 'flex';
 }
@@ -738,40 +792,32 @@ function showApp() {
   showTab('survey');
 }
 
-// ─── SHEET SETUP ──────────────────────────────────────────
 async function ensureSheetHeaders() {
   const headers = [
     'Timestamp','Building','Submarket','Tier',
-    'Parking Width (ft)','Free Parking','Visitor Parking','Visitor Parking Clear','Deck Access OK','Deck→Lobby Time',
-    'Lobby Attendant','Attendant Engaged','Lobby Feel (1-5)',
-    'Gym Quality (1-10)','Gym vs Current','Towel Service',
+    'Access Points','Ease of Access (1-5)','Access Notes',
+    'Parking Cost','Unreserved Rate','Reserved Rate','Visitor Parking (1-5)','Visitor Parking Clear','Valet','Deck Access OK','Space Width (in)','Parking Notes','Deck→Lobby Time',
+    'Lobby Attendant','Attendant Engaged','Lobby Feel (1-5)','Lobby Notes',
+    'Gym Quality (1-10)','Gym vs Current','Towel Service','Gym Notes',
     'Amenity Space','Amenity Quality (1-5)',
-    'Café','Café Breakfast','Café Lunch','Café Quality (1-5)',
-    'Ceiling Height (ft)','Glass Height (ft)',
-    'Multiple Exit Routes','Traffic Light','Bottleneck',
-    'Overall (1-5)',
-    'Parking Notes','Lobby Notes','Gym Notes','Café Notes','Interior Notes','Egress Notes','Overall Notes'
+    'Café','Café Breakfast','Café Lunch','Café Quality (1-5)','Café Notes',
+    'Ceiling Height (ft)','Glass Height (ft)','Interior Notes',
+    'Multiple Exit Routes','Traffic Light','Bottleneck','Egress Notes',
+    'Overall (1-5)','Overall Notes'
   ];
   try {
-    const check = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A1:AJ1`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
+    const check = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A1:AP1`, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await check.json();
     if (!data.values || data.values[0]?.length < 5) {
-      await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A1:AJ1?valueInputOption=RAW`,
-        {
-          method: 'PUT',
-          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ values: [headers] })
-        }
-      );
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A1:AP1?valueInputOption=RAW`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [headers] })
+      });
     }
-  } catch(e) { console.log('Header check error', e); }
+  } catch(e) { console.log('Header error', e); }
 }
 
-// ─── TABS ─────────────────────────────────────────────────
 function showTab(tab) {
   document.getElementById('survey-tab').style.display = tab === 'survey' ? 'block' : 'none';
   document.getElementById('calibration-tab').style.display = tab === 'calibration' ? 'block' : 'none';
@@ -784,7 +830,6 @@ function showTab(tab) {
   if (tab === 'saved') renderSaved();
 }
 
-// ─── BUILDING SELECTOR ────────────────────────────────────
 function onBuildingChange() {
   const val = document.getElementById('building-select').value;
   const badge = document.getElementById('submarket-badge');
@@ -799,20 +844,14 @@ function onBuildingChange() {
   custom.style.display = name.includes('Custom') ? 'block' : 'none';
 }
 function updateCustomName() {
-  const v = document.getElementById('custom-building-name').value;
-  document.getElementById('header-building-name').textContent = v || 'Custom Building';
+  document.getElementById('header-building-name').textContent = document.getElementById('custom-building-name').value || 'Custom Building';
 }
 
-// ─── STARS ────────────────────────────────────────────────
 function setStars(type, val) {
   stars[type] = val;
-  const container = document.getElementById('stars-' + type);
-  container.querySelectorAll('.star').forEach((s, i) => {
-    s.classList.toggle('filled', i < val);
-  });
+  document.getElementById('stars-' + type).querySelectorAll('.star').forEach((s, i) => s.classList.toggle('filled', i < val));
 }
 
-// ─── GYM SLIDER ───────────────────────────────────────────
 function onGymSlider(val) {
   const v = parseFloat(val);
   const el = document.getElementById('gym-slider-val');
@@ -820,7 +859,6 @@ function onGymSlider(val) {
   el.classList.toggle('unset', v === 0);
 }
 
-// ─── GYM COMPARE ──────────────────────────────────────────
 function setGymCompare(val) {
   gymCompare = val;
   ['better','same','worse','best'].forEach(k => {
@@ -828,15 +866,17 @@ function setGymCompare(val) {
   });
 }
 
-// ─── TIER ─────────────────────────────────────────────────
-function setTier(val) {
-  tier = val;
-  ['A','B','C'].forEach(k => {
-    document.getElementById('tier-' + k).className = 'tier-btn' + (k === val ? ' selected-' + k : '');
-  });
+function setParkingCost(val) {
+  parkingCost = val;
+  document.getElementById('parking-free-btn').className = 'two-btn' + (val === 'free' ? ' selected-free' : '');
+  document.getElementById('parking-paid-btn').className = 'two-btn' + (val === 'paid' ? ' selected-paid' : '');
 }
 
-// ─── TIMER ────────────────────────────────────────────────
+function setTier(val) {
+  tier = val;
+  ['A','B','C'].forEach(k => { document.getElementById('tier-' + k).className = 'tier-btn' + (k === val ? ' selected-' + k : ''); });
+}
+
 function toggleTimer() {
   if (!timerRunning) {
     timerRunning = true;
@@ -844,27 +884,22 @@ function toggleTimer() {
     document.getElementById('timer-btn').className = 'timer-btn timer-stop';
     timerInterval = setInterval(() => {
       timerSeconds++;
-      const m = Math.floor(timerSeconds / 60);
-      const s = timerSeconds % 60;
+      const m = Math.floor(timerSeconds / 60); const s = timerSeconds % 60;
       document.getElementById('timer-display').textContent = m + ':' + String(s).padStart(2,'0');
     }, 1000);
   } else {
-    timerRunning = false;
-    clearInterval(timerInterval);
+    timerRunning = false; clearInterval(timerInterval);
     document.getElementById('timer-btn').textContent = 'Start';
     document.getElementById('timer-btn').className = 'timer-btn timer-start';
   }
 }
 function resetTimer() {
-  timerRunning = false;
-  clearInterval(timerInterval);
-  timerSeconds = 0;
+  timerRunning = false; clearInterval(timerInterval); timerSeconds = 0;
   document.getElementById('timer-display').textContent = '0:00';
   document.getElementById('timer-btn').textContent = 'Start';
   document.getElementById('timer-btn').className = 'timer-btn timer-start';
 }
 
-// ─── SAVE ─────────────────────────────────────────────────
 function getBuildingName() {
   const val = document.getElementById('building-select').value;
   if (!val) return '';
@@ -872,11 +907,7 @@ function getBuildingName() {
   if (name.includes('Custom')) return document.getElementById('custom-building-name').value || 'Custom';
   return name;
 }
-function getSubmarket() {
-  const val = document.getElementById('building-select').value;
-  if (!val) return '';
-  return val.split('|')[1] || '';
-}
+function getSubmarket() { const val = document.getElementById('building-select').value; return val ? val.split('|')[1] || '' : ''; }
 function g(id) { return document.getElementById(id); }
 function gv(id) { return g(id).value || ''; }
 function gc(id) { return g(id).checked ? 'Yes' : 'No'; }
@@ -891,57 +922,48 @@ async function saveBuilding() {
   const timerStr = timerSeconds > 0 ? m+':'+String(s).padStart(2,'0') : '';
 
   const row = [
-    new Date().toLocaleString(),
-    building,
-    getSubmarket(),
-    tier,
-    gv('parking-width'), gc('parking-free'), gc('parking-visitor'), gc('parking-visitor-clear'), gc('parking-access'), timerStr,
-    gc('lobby-attendant'), gc('lobby-engaged'), stars.lobby || '',
-    gymVal || '', gymCompare, gc('gym-towel'),
+    new Date().toLocaleString(), building, getSubmarket(), tier,
+    gv('access-points'), stars.access || '', gv('access-notes'),
+    parkingCost, gv('parking-unreserved-rate'), gv('parking-reserved-rate'),
+    stars.visitor || '', gc('parking-visitor-clear'), gc('parking-valet'), gc('parking-access'),
+    gv('parking-width'), gv('parking-notes'), timerStr,
+    gc('lobby-attendant'), gc('lobby-engaged'), stars.lobby || '', gv('lobby-notes'),
+    gymVal || '', gymCompare, gc('gym-towel'), gv('gym-notes'),
     gc('amenity-exists'), stars.amenity || '',
-    gc('cafe-exists'), gc('cafe-breakfast'), gc('cafe-lunch'), stars.cafe || '',
-    gv('ceiling-height'), gv('glass-height'),
-    gc('egress-multiple'), gc('egress-light'), gc('egress-bottleneck'),
-    stars.overall || '',
-    gv('parking-notes'), gv('lobby-notes'), gv('gym-notes'), gv('cafe-notes'), gv('interior-notes'), gv('egress-notes'), gv('overall-notes')
+    gc('cafe-exists'), gc('cafe-breakfast'), gc('cafe-lunch'), stars.cafe || '', gv('cafe-notes'),
+    gv('ceiling-height'), gv('glass-height'), gv('interior-notes'),
+    gc('egress-multiple'), gc('egress-light'), gc('egress-bottleneck'), gv('egress-notes'),
+    stars.overall || '', gv('overall-notes')
   ];
 
-  // Save locally
   const entry = { building, submarket: getSubmarket(), tier, gymQuality: gymVal, lobbyFeel: stars.lobby, overall: stars.overall, gymCompare, row, timestamp: new Date().toLocaleTimeString() };
   surveys.push(entry);
   localStorage.setItem('sm_surveys', JSON.stringify(surveys));
 
-  // Save to sheet
   try {
     showToast('Saving to Google Sheet...', '');
     const resp = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A:AJ:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A:AP:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
       {
         method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ values: [row] })
       }
     );
-    if (resp.ok) {
-      showToast('✓ Saved — ' + building, 'success');
-      clearForm();
-    } else {
-      showToast('Sheet error — saved locally', 'error');
-    }
-  } catch(e) {
-    showToast('Offline — saved locally', 'error');
-  }
+    if (resp.ok) { showToast('✓ Saved — ' + building, 'success'); clearForm(); }
+    else { showToast('Sheet error — saved locally', 'error'); }
+  } catch(e) { showToast('Offline — saved locally', 'error'); }
 }
 
 function clearForm() {
-  // Reset all fields
-  ['parking-width','ceiling-height','glass-height'].forEach(id => g(id).value = '');
-  ['parking-free','parking-visitor','parking-visitor-clear','parking-access','lobby-attendant','lobby-engaged','gym-towel','amenity-exists','cafe-exists','cafe-breakfast','cafe-lunch','egress-multiple','egress-light','egress-bottleneck'].forEach(id => g(id).checked = false);
-  ['parking-notes','lobby-notes','gym-notes','cafe-notes','interior-notes','egress-notes','overall-notes'].forEach(id => g(id).value = '');
+  ['access-points','parking-unreserved-rate','parking-reserved-rate','parking-width','ceiling-height','glass-height'].forEach(id => g(id).value = '');
+  ['parking-visitor-clear','parking-valet','parking-access','lobby-attendant','lobby-engaged','gym-towel','amenity-exists','cafe-exists','cafe-breakfast','cafe-lunch','egress-multiple','egress-light','egress-bottleneck'].forEach(id => g(id).checked = false);
+  ['access-notes','parking-notes','lobby-notes','gym-notes','cafe-notes','interior-notes','egress-notes','overall-notes'].forEach(id => g(id).value = '');
   g('gym-slider').value = 0; onGymSlider(0);
-  stars = { lobby: 0, amenity: 0, cafe: 0, overall: 0 };
-  ['lobby','amenity','cafe','overall'].forEach(t => { document.getElementById('stars-'+t).querySelectorAll('.star').forEach(s => s.classList.remove('filled')); });
+  stars = { access: 0, visitor: 0, lobby: 0, amenity: 0, cafe: 0, overall: 0 };
+  ['access','visitor','lobby','amenity','cafe','overall'].forEach(t => { document.getElementById('stars-'+t).querySelectorAll('.star').forEach(s => s.classList.remove('filled')); });
   gymCompare = ''; ['better','same','worse','best'].forEach(k => { g('gym-'+k).className = 'compare-btn'; });
+  parkingCost = ''; g('parking-free-btn').className = 'two-btn'; g('parking-paid-btn').className = 'two-btn';
   tier = ''; ['A','B','C'].forEach(k => { g('tier-'+k).className = 'tier-btn'; });
   resetTimer();
   g('building-select').value = '';
@@ -950,7 +972,6 @@ function clearForm() {
   g('header-building-name').textContent = 'Select a Building';
 }
 
-// ─── CALIBRATION ──────────────────────────────────────────
 function renderCalib() {
   const list = document.getElementById('calib-list');
   if (surveys.length === 0) { list.innerHTML = '<div style="color:var(--slate);text-align:center;padding:40px 0;">No buildings surveyed yet.</div>'; return; }
@@ -983,7 +1004,6 @@ function renderCalib() {
   `).join('');
 }
 
-// ─── SAVED LIST ───────────────────────────────────────────
 function renderSaved() {
   const list = document.getElementById('saved-list');
   document.getElementById('saved-count').textContent = surveys.length + ' building' + (surveys.length !== 1 ? 's' : '') + ' surveyed';
@@ -1005,18 +1025,14 @@ function renderSaved() {
   `).join('');
 }
 
-// ─── EDIT MODAL ───────────────────────────────────────────
 function openModal(i) {
-  editIndex = i;
-  const s = surveys[i];
+  editIndex = i; const s = surveys[i];
   document.getElementById('modal-title').textContent = s.building;
   modalGymVal = s.gymQuality || 0;
   document.getElementById('modal-gym-slider').value = modalGymVal;
   onModalGymSlider(modalGymVal);
-  modalStars.lobby = s.lobbyFeel || 0;
-  modalStars.overall = s.overall || 0;
-  setModalStars('lobby', modalStars.lobby);
-  setModalStars('overall', modalStars.overall);
+  modalStars.lobby = s.lobbyFeel || 0; modalStars.overall = s.overall || 0;
+  setModalStars('lobby', modalStars.lobby); setModalStars('overall', modalStars.overall);
   modalTier = s.tier || '';
   ['A','B','C'].forEach(k => { document.getElementById('modal-tier-'+k).className = 'tier-btn' + (k === modalTier ? ' selected-'+k : ''); });
   document.getElementById('edit-modal').classList.add('open');
@@ -1024,8 +1040,7 @@ function openModal(i) {
 function closeModal() { document.getElementById('edit-modal').classList.remove('open'); }
 function onModalGymSlider(val) {
   modalGymVal = parseFloat(val);
-  const el = document.getElementById('modal-gym-val');
-  el.textContent = modalGymVal === 0 ? '—' : modalGymVal;
+  document.getElementById('modal-gym-val').textContent = modalGymVal === 0 ? '—' : modalGymVal;
 }
 function setModalStars(type, val) {
   modalStars[type] = val;
@@ -1042,12 +1057,10 @@ function saveModalEdit() {
   surveys[editIndex].overall = modalStars.overall;
   surveys[editIndex].tier = modalTier;
   localStorage.setItem('sm_surveys', JSON.stringify(surveys));
-  closeModal();
-  renderCalib();
+  closeModal(); renderCalib();
   showToast('✓ Updated ' + surveys[editIndex].building, 'success');
 }
 
-// ─── TOAST ────────────────────────────────────────────────
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1055,7 +1068,6 @@ function showToast(msg, type) {
   setTimeout(() => t.className = 'toast', 2500);
 }
 
-// ─── INIT ─────────────────────────────────────────────────
 checkAuth();
 </script>
 </body>
