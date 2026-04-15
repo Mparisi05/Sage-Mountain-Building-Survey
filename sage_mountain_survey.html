@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Building Survey — Sage Mountain</title>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal: #24282b;
+    --slate: #5a6771;
+    --light-gray: #c1c5c8;
+    --blue: #0a4da7;
+    --light-blue: #afd1ff;
+    --bg: #f4f5f6;
+    --white: #ffffff;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --amber: #f39c12;
+    --gold: #f1c40f;
+    --card: #ffffff;
+    --border: #e0e3e6;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Karla', sans-serif; background: var(--bg); color: var(--charcoal); min-height: 100vh; }
+
+  /* AUTH SCREEN */
+  #auth-screen {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 32px 24px; text-align: center;
+  }
+  .auth-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .auth-title { font-size: 26px; font-weight: 700; color: var(--charcoal); margin-bottom: 8px; }
+  .auth-sub { font-size: 15px; color: var(--slate); margin-bottom: 36px; line-height: 1.5; }
+  .auth-btn {
+    display: flex; align-items: center; gap: 12px; background: var(--white);
+    border: 2px solid var(--border); border-radius: var(--radius); padding: 14px 24px;
+    font-family: 'Karla', sans-serif; font-size: 16px; font-weight: 600; color: var(--charcoal);
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .auth-btn:hover { border-color: var(--blue); box-shadow: 0 4px 16px rgba(10,77,167,0.15); }
+  .auth-btn svg { width: 22px; height: 22px; }
+  .auth-note { margin-top: 20px; font-size: 13px; color: var(--slate); }
+
+  /* HEADER */
+  #app { display: none; }
+  .header {
+    background: var(--charcoal); color: var(--white); padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; flex-direction: column; }
+  .header-brand { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-blue); }
+  .header-title { font-size: 17px; font-weight: 700; }
+  .header-right { display: flex; gap: 8px; }
+  .hdr-btn {
+    background: rgba(255,255,255,0.12); border: none; border-radius: 8px;
+    color: var(--white); font-family: 'Karla', sans-serif; font-size: 12px; font-weight: 600;
+    padding: 7px 12px; cursor: pointer; transition: background 0.2s;
+  }
+  .hdr-btn:hover { background: rgba(255,255,255,0.22); }
+  .hdr-btn.active { background: var(--blue); }
+
+  /* TABS */
+  .tabs { display: flex; background: var(--white); border-bottom: 2px solid var(--border); overflow-x: auto; }
+  .tab {
+    flex: 1; min-width: 80px; padding: 12px 8px; text-align: center;
+    font-size: 13px; font-weight: 600; color: var(--slate); cursor: pointer;
+    border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* MAIN CONTENT */
+  .main { padding: 16px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
+
+  /* BUILDING SELECTOR */
+  .building-selector { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--slate); margin-bottom: 10px; }
+  .building-select {
+    width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 2px solid var(--border);
+    font-family: 'Karla', sans-serif; font-size: 16px; color: var(--charcoal);
+    background: var(--white); appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235a6771' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+  }
+  .building-select:focus { outline: none; border-color: var(--blue); }
+  .submarket-badge {
+    display: inline-block; margin-top: 8px; padding: 4px 10px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  }
+  .badge-buckhead { background: #e8f0fc; color: var(--blue); }
+  .badge-perimeter { background: #e8f7ef; color: #1a7a45; }
+
+  /* SURVEY CARD */
+  .survey-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+  .card-title { font-size: 14px; font-weight: 700; color: var(--charcoal); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .card-icon { font-size: 18px; }
+
+  /* TOGGLE ROW */
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .toggle-label { font-size: 15px; color: var(--charcoal); font-weight: 500; }
+  .toggle-switch { position: relative; width: 50px; height: 28px; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; inset: 0; background: var(--light-gray); border-radius: 28px; cursor: pointer; transition: 0.3s;
+  }
+  .toggle-slider:before {
+    content: ''; position: absolute; width: 22px; height: 22px; left: 3px; top: 3px;
+    background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .toggle-switch input:checked + .toggle-slider { background: var(--blue); }
+  .toggle-switch input:checked + .toggle-slider:before { transform: translateX(22px); }
+
+  /* NUMBER INPUT */
+  .number-input-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .number-input-row:last-child { border-bottom: none; }
+  .number-input { width: 90px; padding: 8px 10px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: 'Karla', sans-serif; font-size: 16px; text-align: center; color: var(--charcoal); }
+  .number-input:focus { outline: none; border-color: var(--blue); }
+  .input-hint { font-size: 12px; color: var(--slate); margin-top: 2px; }
+
+  /* TIMER */
+  .timer-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .timer-display { font-size: 24px; font-weight: 700; color: var(--charcoal); font-variant-numeric: tabular-nums; min-width: 70px; }
+  .timer-btn {
+    padding: 8px 18px; border-radius: var(--radius-sm); border: none; font-family: 'Karla', sans-serif;
+    font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .timer-start { background: var(--blue); color: white; }
+  .timer-stop { background: var(--red); color: white; }
+  .timer-reset { background: var(--border); color: var(--slate); }
+
+  /* STAR RATING (5-point tap) */
+  .star-row { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .star-row:last-child { border-bottom: none; }
+  .star-label { font-size: 15px; color: var(--charcoal); font-weight: 500; margin-bottom: 8px; }
+  .stars { display: flex; gap: 6px; }
+  .star { font-size: 28px; cursor: pointer; transition: transform 0.15s; color: var(--light-gray); user-select: none; }
+  .star.filled { color: var(--amber); }
+  .star:active { transform: scale(1.3); }
+
+  /* SLIDER RATING (10-point) */
+  .slider-section { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .slider-section:last-child { border-bottom: none; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .slider-label { font-size: 15px; color: var(--charcoal); font-weight: 500; }
+  .slider-value { font-size: 28px; font-weight: 700; color: var(--blue); min-width: 40px; text-align: right; }
+  .slider-value.unset { color: var(--light-gray); }
+  input[type=range] {
+    width: 100%; -webkit-appearance: none; appearance: none;
+    height: 6px; border-radius: 3px; background: var(--light-gray); outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--blue); cursor: pointer; box-shadow: 0 2px 8px rgba(10,77,167,0.3);
+  }
+  .slider-scale { display: flex; justify-content: space-between; font-size: 11px; color: var(--slate); margin-top: 4px; }
+  .gym-compare { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .compare-btn {
+    flex: 1; min-width: 60px; padding: 9px 8px; border-radius: var(--radius-sm); border: 2px solid var(--border);
+    font-family: 'Karla', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; background: var(--white); color: var(--slate); text-align: center;
+  }
+  .compare-btn.selected-better { background: #e8f7ef; border-color: #2ecc71; color: #1a7a45; }
+  .compare-btn.selected-same { background: #f0f4f8; border-color: var(--slate); color: var(--charcoal); }
+  .compare-btn.selected-worse { background: #fdf0ee; border-color: var(--red); color: #c0392b; }
+  .compare-btn.selected-best { background: #fef9e7; border-color: var(--gold); color: #b7950b; }
+
+  /* TEXT NOTE */
+  .note-area {
+    width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: var(--radius-sm);
+    font-family: 'Karla', sans-serif; font-size: 15px; color: var(--charcoal); resize: none;
+    min-height: 72px; margin-top: 4px;
+  }
+  .note-area:focus { outline: none; border-color: var(--blue); }
+
+  /* TIER SELECTOR */
+  .tier-selector { display: flex; gap: 10px; margin-top: 4px; }
+  .tier-btn {
+    flex: 1; padding: 12px 8px; border-radius: var(--radius-sm); border: 2px solid var(--border);
+    font-family: 'Karla', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; background: var(--white); color: var(--slate); text-align: center;
+  }
+  .tier-btn.selected-A { background: #e8f0fc; border-color: var(--blue); color: var(--blue); }
+  .tier-btn.selected-B { background: #fef5e7; border-color: var(--amber); color: #b7770d; }
+  .tier-btn.selected-C { background: #fdf0ee; border-color: var(--red); color: #c0392b; }
+
+  /* SAVE BUTTON */
+  .save-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px;
+    background: var(--white); border-top: 1px solid var(--border);
+    display: flex; gap: 10px; max-width: 600px; margin: 0 auto;
+  }
+  .save-btn {
+    flex: 1; padding: 15px; border-radius: var(--radius); border: none;
+    font-family: 'Karla', sans-serif; font-size: 16px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .save-btn-primary { background: var(--blue); color: white; }
+  .save-btn-primary:hover { background: #0940891; }
+  .save-btn-primary:active { transform: scale(0.98); }
+  .save-btn-secondary { background: var(--border); color: var(--charcoal); flex: 0 0 auto; padding: 15px 20px; }
+
+  /* CALIBRATION PANEL */
+  #calibration-tab { display: none; }
+  .calib-header { font-size: 13px; color: var(--slate); margin-bottom: 12px; line-height: 1.5; }
+  .calib-item {
+    background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
+    padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s;
+  }
+  .calib-item:hover { border-color: var(--blue); }
+  .calib-building-name { font-size: 15px; font-weight: 700; color: var(--charcoal); margin-bottom: 8px; }
+  .calib-ratings { display: flex; gap: 12px; flex-wrap: wrap; }
+  .calib-rating { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .calib-rating-val { font-size: 20px; font-weight: 700; color: var(--blue); }
+  .calib-rating-val.unset { color: var(--light-gray); font-size: 14px; }
+  .calib-rating-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--slate); }
+  .calib-tier { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-left: auto; }
+  .tier-A-badge { background: #e8f0fc; color: var(--blue); }
+  .tier-B-badge { background: #fef5e7; color: #b7770d; }
+  .tier-C-badge { background: #fdf0ee; color: #c0392b; }
+  .tier-none-badge { background: var(--bg); color: var(--slate); }
+  .calib-top-row { display: flex; align-items: center; justify-content: space-between; }
+
+  /* SAVED LIST */
+  #saved-tab { display: none; }
+  .saved-count { font-size: 13px; color: var(--slate); margin-bottom: 12px; }
+  .saved-item {
+    background: var(--card); border-radius: var(--radius); border: 1px solid var(--border);
+    padding: 14px 16px; margin-bottom: 10px;
+  }
+  .saved-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .saved-building { font-size: 15px; font-weight: 700; }
+  .saved-meta { font-size: 12px; color: var(--slate); }
+  .saved-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .chip { padding: 3px 9px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--bg); color: var(--slate); border: 1px solid var(--border); }
+  .chip-yes { background: #e8f7ef; color: #1a7a45; border-color: #b2dfcc; }
+  .chip-no { background: #fdf0ee; color: #c0392b; border-color: #f5b7b1; }
+
+  /* STATUS TOAST */
+  .toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--charcoal); color: white; padding: 10px 20px; border-radius: 30px;
+    font-size: 14px; font-weight: 600; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.success { background: #1a7a45; }
+  .toast.error { background: #c0392b; }
+
+  /* MODAL for edit */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300;
+    align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--white); border-radius: 20px 20px 0 0; padding: 20px 16px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--slate); margin-bottom: 20px; }
+  .modal-close { float: right; background: var(--border); border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 18px; cursor: pointer; color: var(--slate); }
+
+  .divider { height: 1px; background: var(--border); margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-logo">Industry Real Estate Partners</div>
+  <div class="auth-title">Building Survey</div>
+  <div class="auth-sub">Sage Mountain Advisors<br>Field Inspection Tool — April 2026</div>
+  <button class="auth-btn" onclick="signIn()">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+    </svg>
+    Sign in with Google
+  </button>
+  <div class="auth-note">Saves directly to your Google Sheet</div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-brand">IREP — Sage Mountain Survey</div>
+      <div class="header-title" id="header-building-name">Select a Building</div>
+    </div>
+    <div class="header-right">
+      <button class="hdr-btn" onclick="showTab('survey')" id="tab-survey-btn">Survey</button>
+      <button class="hdr-btn" onclick="showTab('calibration')" id="tab-calib-btn">Calibrate</button>
+      <button class="hdr-btn" onclick="showTab('saved')" id="tab-saved-btn">Saved</button>
+    </div>
+  </div>
+
+  <!-- SURVEY TAB -->
+  <div id="survey-tab">
+    <div class="main">
+
+      <!-- Building Selector -->
+      <div class="building-selector">
+        <div class="section-label">Current Building</div>
+        <select class="building-select" id="building-select" onchange="onBuildingChange()">
+          <option value="">— Select a building —</option>
+          <optgroup label="Buckhead">
+            <option value="3399 Peachtree|Buckhead">3399 Peachtree Road NE</option>
+            <option value="3475 Piedmont|Buckhead">3475 Piedmont Road NE</option>
+            <option value="3500 Lenox|Buckhead">3500 Lenox Road NE</option>
+            <option value="3550 Lenox|Buckhead">3550 Lenox Road NE</option>
+            <option value="3625 Cumberland|Buckhead">3625 Cumberland Blvd</option>
+            <option value="5 Concourse|Buckhead">5 Concourse Pkwy</option>
+            <option value="One Alliance Center|Buckhead">One Alliance Center</option>
+            <option value="Two Alliance Center|Buckhead">Two Alliance Center</option>
+            <option value="Buckhead Plaza|Buckhead">Buckhead Plaza</option>
+            <option value="Tower Place 200|Buckhead">Tower Place 200</option>
+            <option value="Tower Place 100|Buckhead">Tower Place 100</option>
+            <option value="3340 Peachtree|Buckhead">3340 Peachtree Road NE</option>
+            <option value="3280 Peachtree|Buckhead">3280 Peachtree Road NE</option>
+            <option value="Prominence|Buckhead">Prominence</option>
+            <option value="3017 Bolling Way|Buckhead">3017 Bolling Way NE</option>
+            <option value="Resurgens Plaza|Buckhead">Resurgens Plaza</option>
+            <option value="Atlanta Financial Center|Buckhead">Atlanta Financial Center</option>
+            <option value="3 Ravinia|Buckhead">3 Ravinia Drive</option>
+            <option value="2 Ravinia|Buckhead">2 Ravinia Drive</option>
+            <option value="1 Ravinia|Buckhead">1 Ravinia Drive</option>
+            <option value="3200 Windy Hill|Buckhead">3200 Windy Hill Road</option>
+            <option value="Custom Buckhead|Buckhead">+ Add Custom (Buckhead)</option>
+          </optgroup>
+          <optgroup label="Central Perimeter">
+            <option value="Northpark Town Center|Central Perimeter">Northpark Town Center</option>
+            <option value="100 Ashford Center|Central Perimeter">100 Ashford Center North</option>
+            <option value="Custom Perimeter|Central Perimeter">+ Add Custom (Central Perimeter)</option>
+          </optgroup>
+        </select>
+        <div id="submarket-badge" style="display:none;"></div>
+        <input type="text" id="custom-building-name" placeholder="Enter building name..." style="display:none; margin-top:10px; width:100%; padding:10px 12px; border:2px solid var(--border); border-radius:8px; font-family:Karla,sans-serif; font-size:16px;" oninput="updateCustomName()">
+      </div>
+
+      <!-- PARKING -->
+      <div class="survey-card">
+        <div class="card-title"><span class="card-icon">🅿️</span> Parking</div>
+
+        <div class="number-input-row">
+          <div>
+            <div class="toggle-label">Space Width (ft)</div>
+            <div class="input-hint">Standard = 8.5 ft</div>
+          </div>
+          <input type="number" class="number-input" id="parking-width" step="0.5" min="6" max="12" placeholder="—">
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">Free Parking</div>
+          <label class="toggle-switch"><input type="checkbox" id="parking-free"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Visitor Parking Available</div>
+          <label class="toggle-switch"><input type="checkbox" id="parking-visitor"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Visitor Parking Easy to Find</div>
+          <label class="toggle-switch"><input type="checkbox" id="parking-visitor-clear"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Deck Access Intuitive</div>
+          <label class="toggle-switch"><input type="checkbox" id="parking-access"><span class="toggle-slider"></span></label>
+        </div>
+
+        <div class="timer-row" style="margin-top:10px;">
+          <div>
+            <div class="toggle-label">Deck → Lobby Time</div>
+            <div class="input-hint">Tap Start when you leave your car</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="timer-display" id="timer-display">0:00</div>
+            <button class="timer-btn timer-start" id="timer-btn" onclick="toggleTimer()">Start</button>
+            <button class="timer-btn timer-reset" onclick="resetTimer()">↺</button>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="section-label">Parking Notes</div>
+          <textarea class="note-area" id="parking-notes" placeholder="Observations about parking..."></textarea>
+        </div>
+      </div>
+
+      <!-- ARRIVAL / LOBBY -->
+      <div class="survey-card">
+        <div class="card-title"><span class="card-icon">🏢</span> Arrival & Lobby</div>
+
+        <div class="toggle-row">
+          <div class="toggle-label">Lobby Attendant Present</div>
+          <label class="toggle-switch"><input type="checkbox" id="lobby-attendant"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Attendant Engaged / Professional</div>
+          <label class="toggle-switch"><input type="checkbox" id="lobby-engaged"><span class="toggle-slider"></span></label>
+        </div>
+
+        <div class="star-row" style="margin-top:10px;">
+          <div class="star-label">Lobby Feel (1–5)</div>
+          <div class="stars" id="stars-lobby">
+            <span class="star" onclick="setStars('lobby',1)">★</span>
+            <span class="star" onclick="setStars('lobby',2)">★</span>
+            <span class="star" onclick="setStars('lobby',3)">★</span>
+            <span class="star" onclick="setStars('lobby',4)">★</span>
+            <span class="star" onclick="setStars('lobby',5)">★</span>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;">
+          <div class="section-label">Lobby Notes</div>
+          <textarea class="note-area" id="lobby-notes" placeholder="First impression, finishes, vibe..."></textarea>
+        </div>
+      </div>
+
+      <!-- AMENITIES -->
+      <div class="survey-card">
+        <div class="card-title"><span class="card-icon">🏋️</span> Amenities</div>
+
+        <!-- GYM -->
+        <div class="slider-section">
+          <div class="slider-header">
+            <div class="slider-label">Gym Quality (1–10)</div>
+            <div class="slider-value unset" id="gym-slider-val">—</div>
+          </div>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="gym-slider" oninput="onGymSlider(this.value)">
+          <div class="slider-scale"><span>1</span><span>5</span><span>10</span></div>
+
+          <div style="margin-top:12px;">
+            <div class="section-label">vs. Sage Mountain Current Gym</div>
+            <div class="gym-compare">
+              <button class="compare-btn" id="gym-better" onclick="setGymCompare('better')">↑ Better</button>
+              <button class="compare-btn" id="gym-same" onclick="setGymCompare('same')">&nbsp;= Same&nbsp;</button>
+              <button class="compare-btn" id="gym-worse" onclick="setGymCompare('worse')">↓ Worse</button>
+              <button class="compare-btn" id="gym-best" onclick="setGymCompare('best')">🌟 Best in Market</button>
+            </div>
+          </div>
+
+          <div class="toggle-row" style="margin-top:10px;">
+            <div class="toggle-label">Towel Service</div>
+            <label class="toggle-switch"><input type="checkbox" id="gym-towel"><span class="toggle-slider"></span></label>
+          </div>
+
+          <div style="margin-top:6px;">
+            <div class="section-label">Gym Notes</div>
+            <textarea class="note-area" id="gym-notes" placeholder="Equipment, size, cleanliness, extras..."></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- AMENITY SPACE -->
+        <div class="star-row" style="margin-top:10px;">
+          <div class="toggle-row" style="padding-top:0;">
+            <div class="toggle-label">Amenity/Gathering Space</div>
+            <label class="toggle-switch"><input type="checkbox" id="amenity-exists"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="star-label" style="margin-top:8px;">Amenity Space Quality (1–5)</div>
+          <div class="stars" id="stars-amenity">
+            <span class="star" onclick="setStars('amenity',1)">★</span>
+            <span class="star" onclick="setStars('amenity',2)">★</span>
+            <span class="star" onclick="setStars('amenity',3)">★</span>
+            <span class="star" onclick="setStars('amenity',4)">★</span>
+            <span class="star" onclick="setStars('amenity',5)">★</span>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:10px;"></div>
+
+        <!-- CAFE -->
+        <div style="margin-top:10px;">
+          <div class="toggle-row" style="padding-top:0;">
+            <div class="toggle-label">Building Café</div>
+            <label class="toggle-switch"><input type="checkbox" id="cafe-exists"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-label">Serves Breakfast</div>
+            <label class="toggle-switch"><input type="checkbox" id="cafe-breakfast"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-label">Serves Lunch</div>
+            <label class="toggle-switch"><input type="checkbox" id="cafe-lunch"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="star-row" style="margin-top:8px;">
+            <div class="star-label">Café Quality (1–5)</div>
+            <div class="stars" id="stars-cafe">
+              <span class="star" onclick="setStars('cafe',1)">★</span>
+              <span class="star" onclick="setStars('cafe',2)">★</span>
+              <span class="star" onclick="setStars('cafe',3)">★</span>
+              <span class="star" onclick="setStars('cafe',4)">★</span>
+              <span class="star" onclick="setStars('cafe',5)">★</span>
+            </div>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="section-label">Café Notes</div>
+            <textarea class="note-area" id="cafe-notes" placeholder="Menu quality, seating, vibe..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERIOR -->
+      <div class="survey-card">
+        <div class="card-title"><span class="card-icon">📐</span> Interior (if accessible)</div>
+        <div class="number-input-row">
+          <div>
+            <div class="toggle-label">Ceiling Height (ft)</div>
+          </div>
+          <input type="number" class="number-input" id="ceiling-height" step="0.5" min="8" max="20" placeholder="—">
+        </div>
+        <div class="number-input-row">
+          <div>
+            <div class="toggle-label">Glass Line Height (ft)</div>
+          </div>
+          <input type="number" class="number-input" id="glass-height" step="0.5" min="4" max="20" placeholder="—">
+        </div>
+        <div style="margin-top:10px;">
+          <div class="section-label">Interior Notes</div>
+          <textarea class="note-area" id="interior-notes" placeholder="Finish quality, natural light, layout impressions..."></textarea>
+        </div>
+      </div>
+
+      <!-- EGRESS -->
+      <div class="survey-card">
+        <div class="card-title"><span class="card-icon">🚗</span> Egress</div>
+        <div class="toggle-row">
+          <div class="toggle-label">Multiple Exit Routes</div>
+          <label class="toggle-switch"><input type="checkbox" id="egress-multiple"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Traffic Light at Exit</div>
+          <label class="toggle-switch"><input type="checkbox" id="egress-light"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label">Bottleneck / Congestion Issue</div>
+          <label class="toggle-switch"><input type="checkbox" id="egress-bottleneck"><span class="toggle-slider"></span></label>
+        </div>
+        <div style="margin-top:10px;">
+          <div class="section-label">Egress Notes</div>
+          <textarea class="note-area" id="egress-notes" placeholder="Exit flow, nearby roads, peak hour concerns..."></textarea>
+        </div>
+      </div>
+
+      <!-- OVERALL -->
+      <div class="survey-card">
+        <div class="card-title"><span class="card-icon">📊</span> Overall Assessment</div>
+
+        <div class="star-row">
+          <div class="star-label">Overall Building Impression (1–5)</div>
+          <div class="stars" id="stars-overall">
+            <span class="star" onclick="setStars('overall',1)">★</span>
+            <span class="star" onclick="setStars('overall',2)">★</span>
+            <span class="star" onclick="setStars('overall',3)">★</span>
+            <span class="star" onclick="setStars('overall',4)">★</span>
+            <span class="star" onclick="setStars('overall',5)">★</span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <div class="section-label">Tier Classification</div>
+          <div class="tier-selector">
+            <button class="tier-btn" id="tier-A" onclick="setTier('A')">A List</button>
+            <button class="tier-btn" id="tier-B" onclick="setTier('B')">B List</button>
+            <button class="tier-btn" id="tier-C" onclick="setTier('C')">C List</button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <div class="section-label">General Notes</div>
+          <textarea class="note-area" id="overall-notes" placeholder="Anything else worth capturing..."></textarea>
+        </div>
+      </div>
+
+    </div><!-- end main -->
+  </div><!-- end survey-tab -->
+
+  <!-- CALIBRATION TAB -->
+  <div id="calibration-tab">
+    <div class="main">
+      <div class="calib-header">Tap any building to edit its ratings. Use this to recalibrate as you see more buildings throughout the day.</div>
+      <div id="calib-list"></div>
+    </div>
+  </div>
+
+  <!-- SAVED TAB -->
+  <div id="saved-tab">
+    <div class="main">
+      <div class="saved-count" id="saved-count">0 buildings surveyed</div>
+      <div id="saved-list"></div>
+    </div>
+  </div>
+
+  <!-- SAVE BAR -->
+  <div class="save-bar" id="save-bar">
+    <button class="save-btn save-btn-secondary" onclick="clearForm()">Clear</button>
+    <button class="save-btn save-btn-primary" onclick="saveBuilding()">Save to Sheet →</button>
+  </div>
+
+</div><!-- end app -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title" id="modal-title">Edit Building</div>
+    <div class="modal-sub">Adjust ratings for recalibration</div>
+
+    <div class="slider-section">
+      <div class="slider-header">
+        <div class="slider-label">Gym Quality (1–10)</div>
+        <div class="slider-value" id="modal-gym-val">—</div>
+      </div>
+      <input type="range" min="0" max="10" step="0.5" value="0" id="modal-gym-slider" oninput="onModalGymSlider(this.value)">
+      <div class="slider-scale"><span>1</span><span>5</span><span>10</span></div>
+    </div>
+
+    <div class="star-row" style="margin-top:10px;">
+      <div class="star-label">Lobby Feel (1–5)</div>
+      <div class="stars" id="modal-stars-lobby">
+        <span class="star" onclick="setModalStars('lobby',1)">★</span>
+        <span class="star" onclick="setModalStars('lobby',2)">★</span>
+        <span class="star" onclick="setModalStars('lobby',3)">★</span>
+        <span class="star" onclick="setModalStars('lobby',4)">★</span>
+        <span class="star" onclick="setModalStars('lobby',5)">★</span>
+      </div>
+    </div>
+
+    <div class="star-row">
+      <div class="star-label">Overall Impression (1–5)</div>
+      <div class="stars" id="modal-stars-overall">
+        <span class="star" onclick="setModalStars('overall',1)">★</span>
+        <span class="star" onclick="setModalStars('overall',2)">★</span>
+        <span class="star" onclick="setModalStars('overall',3)">★</span>
+        <span class="star" onclick="setModalStars('overall',4)">★</span>
+        <span class="star" onclick="setModalStars('overall',5)">★</span>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="section-label">Tier</div>
+      <div class="tier-selector" id="modal-tier-selector">
+        <button class="tier-btn" id="modal-tier-A" onclick="setModalTier('A')">A List</button>
+        <button class="tier-btn" id="modal-tier-B" onclick="setModalTier('B')">B List</button>
+        <button class="tier-btn" id="modal-tier-C" onclick="setModalTier('C')">C List</button>
+      </div>
+    </div>
+
+    <button class="save-btn save-btn-primary" style="width:100%;margin-top:20px;" onclick="saveModalEdit()">Save Changes</button>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+const CLIENT_ID = '21942567768-4s4d3m8pa8ck95oum0lggig9uoimab3j.apps.googleusercontent.com';
+const SHEET_ID = '1vXdhIMrf3ICkFRQ1vFQ4zSNC1fijT7n_mRdbGJfjiJQ';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+
+// ─── STATE ────────────────────────────────────────────────
+let accessToken = null;
+let surveys = JSON.parse(localStorage.getItem('sm_surveys') || '[]');
+let stars = { lobby: 0, amenity: 0, cafe: 0, overall: 0 };
+let gymCompare = '';
+let tier = '';
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+let editIndex = null;
+let modalStars = { lobby: 0, overall: 0 };
+let modalTier = '';
+let modalGymVal = 0;
+
+// ─── AUTH ─────────────────────────────────────────────────
+function signIn() {
+  const params = new URLSearchParams({
+    client_id: CLIENT_ID,
+    redirect_uri: window.location.href.split('?')[0],
+    response_type: 'token',
+    scope: SCOPES,
+    prompt: 'select_account'
+  });
+  window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+}
+
+function checkAuth() {
+  // Check URL hash for token
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  if (params.get('access_token')) {
+    accessToken = params.get('access_token');
+    window.history.replaceState({}, document.title, window.location.pathname);
+    showApp();
+    return;
+  }
+  // Check localStorage
+  const stored = localStorage.getItem('sm_token');
+  const expiry = localStorage.getItem('sm_token_expiry');
+  if (stored && expiry && Date.now() < parseInt(expiry)) {
+    accessToken = stored;
+    showApp();
+    return;
+  }
+  document.getElementById('auth-screen').style.display = 'flex';
+}
+
+function showApp() {
+  if (accessToken) {
+    localStorage.setItem('sm_token', accessToken);
+    localStorage.setItem('sm_token_expiry', Date.now() + 3500000);
+  }
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  ensureSheetHeaders();
+  showTab('survey');
+}
+
+// ─── SHEET SETUP ──────────────────────────────────────────
+async function ensureSheetHeaders() {
+  const headers = [
+    'Timestamp','Building','Submarket','Tier',
+    'Parking Width (ft)','Free Parking','Visitor Parking','Visitor Parking Clear','Deck Access OK','Deck→Lobby Time',
+    'Lobby Attendant','Attendant Engaged','Lobby Feel (1-5)',
+    'Gym Quality (1-10)','Gym vs Current','Towel Service',
+    'Amenity Space','Amenity Quality (1-5)',
+    'Café','Café Breakfast','Café Lunch','Café Quality (1-5)',
+    'Ceiling Height (ft)','Glass Height (ft)',
+    'Multiple Exit Routes','Traffic Light','Bottleneck',
+    'Overall (1-5)',
+    'Parking Notes','Lobby Notes','Gym Notes','Café Notes','Interior Notes','Egress Notes','Overall Notes'
+  ];
+  try {
+    const check = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A1:AJ1`,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
+    );
+    const data = await check.json();
+    if (!data.values || data.values[0]?.length < 5) {
+      await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A1:AJ1?valueInputOption=RAW`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ values: [headers] })
+        }
+      );
+    }
+  } catch(e) { console.log('Header check error', e); }
+}
+
+// ─── TABS ─────────────────────────────────────────────────
+function showTab(tab) {
+  document.getElementById('survey-tab').style.display = tab === 'survey' ? 'block' : 'none';
+  document.getElementById('calibration-tab').style.display = tab === 'calibration' ? 'block' : 'none';
+  document.getElementById('saved-tab').style.display = tab === 'saved' ? 'block' : 'none';
+  document.getElementById('save-bar').style.display = tab === 'survey' ? 'flex' : 'none';
+  document.getElementById('tab-survey-btn').classList.toggle('active', tab === 'survey');
+  document.getElementById('tab-calib-btn').classList.toggle('active', tab === 'calibration');
+  document.getElementById('tab-saved-btn').classList.toggle('active', tab === 'saved');
+  if (tab === 'calibration') renderCalib();
+  if (tab === 'saved') renderSaved();
+}
+
+// ─── BUILDING SELECTOR ────────────────────────────────────
+function onBuildingChange() {
+  const val = document.getElementById('building-select').value;
+  const badge = document.getElementById('submarket-badge');
+  const custom = document.getElementById('custom-building-name');
+  if (!val) { badge.style.display = 'none'; custom.style.display = 'none'; document.getElementById('header-building-name').textContent = 'Select a Building'; return; }
+  const parts = val.split('|');
+  const name = parts[0]; const market = parts[1];
+  document.getElementById('header-building-name').textContent = name.includes('Custom') ? 'Custom Building' : name;
+  badge.style.display = 'inline-block';
+  badge.className = 'submarket-badge ' + (market === 'Buckhead' ? 'badge-buckhead' : 'badge-perimeter');
+  badge.textContent = market;
+  custom.style.display = name.includes('Custom') ? 'block' : 'none';
+}
+function updateCustomName() {
+  const v = document.getElementById('custom-building-name').value;
+  document.getElementById('header-building-name').textContent = v || 'Custom Building';
+}
+
+// ─── STARS ────────────────────────────────────────────────
+function setStars(type, val) {
+  stars[type] = val;
+  const container = document.getElementById('stars-' + type);
+  container.querySelectorAll('.star').forEach((s, i) => {
+    s.classList.toggle('filled', i < val);
+  });
+}
+
+// ─── GYM SLIDER ───────────────────────────────────────────
+function onGymSlider(val) {
+  const v = parseFloat(val);
+  const el = document.getElementById('gym-slider-val');
+  el.textContent = v === 0 ? '—' : v;
+  el.classList.toggle('unset', v === 0);
+}
+
+// ─── GYM COMPARE ──────────────────────────────────────────
+function setGymCompare(val) {
+  gymCompare = val;
+  ['better','same','worse','best'].forEach(k => {
+    document.getElementById('gym-' + k).className = 'compare-btn' + (k === val ? ' selected-' + k : '');
+  });
+}
+
+// ─── TIER ─────────────────────────────────────────────────
+function setTier(val) {
+  tier = val;
+  ['A','B','C'].forEach(k => {
+    document.getElementById('tier-' + k).className = 'tier-btn' + (k === val ? ' selected-' + k : '');
+  });
+}
+
+// ─── TIMER ────────────────────────────────────────────────
+function toggleTimer() {
+  if (!timerRunning) {
+    timerRunning = true;
+    document.getElementById('timer-btn').textContent = 'Stop';
+    document.getElementById('timer-btn').className = 'timer-btn timer-stop';
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const m = Math.floor(timerSeconds / 60);
+      const s = timerSeconds % 60;
+      document.getElementById('timer-display').textContent = m + ':' + String(s).padStart(2,'0');
+    }, 1000);
+  } else {
+    timerRunning = false;
+    clearInterval(timerInterval);
+    document.getElementById('timer-btn').textContent = 'Start';
+    document.getElementById('timer-btn').className = 'timer-btn timer-start';
+  }
+}
+function resetTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  timerSeconds = 0;
+  document.getElementById('timer-display').textContent = '0:00';
+  document.getElementById('timer-btn').textContent = 'Start';
+  document.getElementById('timer-btn').className = 'timer-btn timer-start';
+}
+
+// ─── SAVE ─────────────────────────────────────────────────
+function getBuildingName() {
+  const val = document.getElementById('building-select').value;
+  if (!val) return '';
+  const name = val.split('|')[0];
+  if (name.includes('Custom')) return document.getElementById('custom-building-name').value || 'Custom';
+  return name;
+}
+function getSubmarket() {
+  const val = document.getElementById('building-select').value;
+  if (!val) return '';
+  return val.split('|')[1] || '';
+}
+function g(id) { return document.getElementById(id); }
+function gv(id) { return g(id).value || ''; }
+function gc(id) { return g(id).checked ? 'Yes' : 'No'; }
+
+async function saveBuilding() {
+  const building = getBuildingName();
+  if (!building) { showToast('Select a building first', 'error'); return; }
+  if (!tier) { showToast('Set a tier (A/B/C) before saving', 'error'); return; }
+
+  const gymVal = parseFloat(g('gym-slider').value) || 0;
+  const m = Math.floor(timerSeconds/60); const s = timerSeconds%60;
+  const timerStr = timerSeconds > 0 ? m+':'+String(s).padStart(2,'0') : '';
+
+  const row = [
+    new Date().toLocaleString(),
+    building,
+    getSubmarket(),
+    tier,
+    gv('parking-width'), gc('parking-free'), gc('parking-visitor'), gc('parking-visitor-clear'), gc('parking-access'), timerStr,
+    gc('lobby-attendant'), gc('lobby-engaged'), stars.lobby || '',
+    gymVal || '', gymCompare, gc('gym-towel'),
+    gc('amenity-exists'), stars.amenity || '',
+    gc('cafe-exists'), gc('cafe-breakfast'), gc('cafe-lunch'), stars.cafe || '',
+    gv('ceiling-height'), gv('glass-height'),
+    gc('egress-multiple'), gc('egress-light'), gc('egress-bottleneck'),
+    stars.overall || '',
+    gv('parking-notes'), gv('lobby-notes'), gv('gym-notes'), gv('cafe-notes'), gv('interior-notes'), gv('egress-notes'), gv('overall-notes')
+  ];
+
+  // Save locally
+  const entry = { building, submarket: getSubmarket(), tier, gymQuality: gymVal, lobbyFeel: stars.lobby, overall: stars.overall, gymCompare, row, timestamp: new Date().toLocaleTimeString() };
+  surveys.push(entry);
+  localStorage.setItem('sm_surveys', JSON.stringify(surveys));
+
+  // Save to sheet
+  try {
+    showToast('Saving to Google Sheet...', '');
+    const resp = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/Sheet1!A:AJ:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [row] })
+      }
+    );
+    if (resp.ok) {
+      showToast('✓ Saved — ' + building, 'success');
+      clearForm();
+    } else {
+      showToast('Sheet error — saved locally', 'error');
+    }
+  } catch(e) {
+    showToast('Offline — saved locally', 'error');
+  }
+}
+
+function clearForm() {
+  // Reset all fields
+  ['parking-width','ceiling-height','glass-height'].forEach(id => g(id).value = '');
+  ['parking-free','parking-visitor','parking-visitor-clear','parking-access','lobby-attendant','lobby-engaged','gym-towel','amenity-exists','cafe-exists','cafe-breakfast','cafe-lunch','egress-multiple','egress-light','egress-bottleneck'].forEach(id => g(id).checked = false);
+  ['parking-notes','lobby-notes','gym-notes','cafe-notes','interior-notes','egress-notes','overall-notes'].forEach(id => g(id).value = '');
+  g('gym-slider').value = 0; onGymSlider(0);
+  stars = { lobby: 0, amenity: 0, cafe: 0, overall: 0 };
+  ['lobby','amenity','cafe','overall'].forEach(t => { document.getElementById('stars-'+t).querySelectorAll('.star').forEach(s => s.classList.remove('filled')); });
+  gymCompare = ''; ['better','same','worse','best'].forEach(k => { g('gym-'+k).className = 'compare-btn'; });
+  tier = ''; ['A','B','C'].forEach(k => { g('tier-'+k).className = 'tier-btn'; });
+  resetTimer();
+  g('building-select').value = '';
+  g('submarket-badge').style.display = 'none';
+  g('custom-building-name').style.display = 'none';
+  g('header-building-name').textContent = 'Select a Building';
+}
+
+// ─── CALIBRATION ──────────────────────────────────────────
+function renderCalib() {
+  const list = document.getElementById('calib-list');
+  if (surveys.length === 0) { list.innerHTML = '<div style="color:var(--slate);text-align:center;padding:40px 0;">No buildings surveyed yet.</div>'; return; }
+  list.innerHTML = surveys.map((s, i) => `
+    <div class="calib-item" onclick="openModal(${i})">
+      <div class="calib-top-row">
+        <div class="calib-building-name">${s.building}</div>
+        <span class="calib-tier ${s.tier ? 'tier-'+s.tier+'-badge' : 'tier-none-badge'}">${s.tier || '—'}</span>
+      </div>
+      <div class="calib-ratings">
+        <div class="calib-rating">
+          <div class="calib-rating-val ${!s.gymQuality ? 'unset' : ''}">${s.gymQuality || '—'}</div>
+          <div class="calib-rating-label">Gym</div>
+        </div>
+        <div class="calib-rating">
+          <div class="calib-rating-val ${!s.lobbyFeel ? 'unset' : ''}">${s.lobbyFeel ? '★'.repeat(s.lobbyFeel) : '—'}</div>
+          <div class="calib-rating-label">Lobby</div>
+        </div>
+        <div class="calib-rating">
+          <div class="calib-rating-val ${!s.overall ? 'unset' : ''}">${s.overall ? '★'.repeat(s.overall) : '—'}</div>
+          <div class="calib-rating-label">Overall</div>
+        </div>
+        <div class="calib-rating">
+          <div class="calib-rating-val" style="font-size:14px;color:var(--slate);">${s.gymCompare || '—'}</div>
+          <div class="calib-rating-label">vs Current</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--slate);margin-top:6px;">${s.submarket} · ${s.timestamp}</div>
+    </div>
+  `).join('');
+}
+
+// ─── SAVED LIST ───────────────────────────────────────────
+function renderSaved() {
+  const list = document.getElementById('saved-list');
+  document.getElementById('saved-count').textContent = surveys.length + ' building' + (surveys.length !== 1 ? 's' : '') + ' surveyed';
+  if (surveys.length === 0) { list.innerHTML = '<div style="color:var(--slate);text-align:center;padding:40px 0;">No buildings surveyed yet.</div>'; return; }
+  list.innerHTML = surveys.map((s, i) => `
+    <div class="saved-item">
+      <div class="saved-item-header">
+        <div class="saved-building">${s.building}</div>
+        <span class="calib-tier ${s.tier ? 'tier-'+s.tier+'-badge' : 'tier-none-badge'}">${s.tier || '—'}</span>
+      </div>
+      <div class="saved-meta">${s.submarket} · ${s.timestamp}</div>
+      <div class="saved-chips">
+        ${s.gymQuality ? '<span class="chip chip-yes">Gym: '+s.gymQuality+'/10</span>' : ''}
+        ${s.gymCompare ? '<span class="chip">'+s.gymCompare+'</span>' : ''}
+        ${s.lobbyFeel ? '<span class="chip">Lobby: '+'★'.repeat(s.lobbyFeel)+'</span>' : ''}
+        ${s.overall ? '<span class="chip">Overall: '+'★'.repeat(s.overall)+'</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── EDIT MODAL ───────────────────────────────────────────
+function openModal(i) {
+  editIndex = i;
+  const s = surveys[i];
+  document.getElementById('modal-title').textContent = s.building;
+  modalGymVal = s.gymQuality || 0;
+  document.getElementById('modal-gym-slider').value = modalGymVal;
+  onModalGymSlider(modalGymVal);
+  modalStars.lobby = s.lobbyFeel || 0;
+  modalStars.overall = s.overall || 0;
+  setModalStars('lobby', modalStars.lobby);
+  setModalStars('overall', modalStars.overall);
+  modalTier = s.tier || '';
+  ['A','B','C'].forEach(k => { document.getElementById('modal-tier-'+k).className = 'tier-btn' + (k === modalTier ? ' selected-'+k : ''); });
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('edit-modal').classList.remove('open'); }
+function onModalGymSlider(val) {
+  modalGymVal = parseFloat(val);
+  const el = document.getElementById('modal-gym-val');
+  el.textContent = modalGymVal === 0 ? '—' : modalGymVal;
+}
+function setModalStars(type, val) {
+  modalStars[type] = val;
+  document.getElementById('modal-stars-'+type).querySelectorAll('.star').forEach((s, i) => s.classList.toggle('filled', i < val));
+}
+function setModalTier(val) {
+  modalTier = val;
+  ['A','B','C'].forEach(k => { document.getElementById('modal-tier-'+k).className = 'tier-btn' + (k === val ? ' selected-'+k : ''); });
+}
+function saveModalEdit() {
+  if (editIndex === null) return;
+  surveys[editIndex].gymQuality = modalGymVal;
+  surveys[editIndex].lobbyFeel = modalStars.lobby;
+  surveys[editIndex].overall = modalStars.overall;
+  surveys[editIndex].tier = modalTier;
+  localStorage.setItem('sm_surveys', JSON.stringify(surveys));
+  closeModal();
+  renderCalib();
+  showToast('✓ Updated ' + surveys[editIndex].building, 'success');
+}
+
+// ─── TOAST ────────────────────────────────────────────────
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.className = 'toast', 2500);
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+checkAuth();
+</script>
+</body>
+</html>
